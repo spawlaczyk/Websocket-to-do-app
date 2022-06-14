@@ -19,11 +19,13 @@ class App extends React.Component {
     this.socket.on('removeTask', (id) => this.removeTask(id));
   };
 
-  removeTask(id) {
+  removeTask(id, isLocal = false) {
     const { tasks } = this.state;
     const filteredTasks = tasks.filter((task) => task.id !== id);
     this.setState({ tasks: filteredTasks });
-    this.socket.emit('removeTask', id);
+    if(isLocal) {
+      this.socket.emit('removeTask', id);
+    };
   };
 
   submitForm(e) {
@@ -58,7 +60,7 @@ class App extends React.Component {
             {tasks.map(task => (
               <li className='task' key={task.id}>
                 {task.name}
-                <button className='btn btn--red' onClick={() => this.removeTask(task.id)}>Remove</button>
+                <button className='btn btn--red' onClick={() => this.removeTask(task.id, true)}>Remove</button>
               </li>
             ))}
           </ul>
